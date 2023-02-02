@@ -21,7 +21,6 @@ HEADERS += \
     bincqlitetreewidget.h \
     finddialog.h \
     findform.h \
-    findreplace_global.h \
     findreplacedialog.h \
     findreplaceform.h \
     mainwindow.h

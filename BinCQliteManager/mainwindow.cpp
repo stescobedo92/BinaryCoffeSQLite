@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "findreplacedialog.h"
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
@@ -164,5 +165,13 @@ void MainWindow::on_actionPreferences_triggered()
 void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox::about(this,"Binary Coffee Sqlite Manager", "Example test");
+}
+
+
+void MainWindow::on_actionFind_and_Replace_triggered()
+{
+    FindReplaceDialog findReplaceDialog(this);
+    findReplaceDialog.setTextEdit(ui->textEdit);
+    findReplaceDialog.exec();
 }
 
