@@ -9,10 +9,12 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    bincqlitetreewidget.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    bincqlitetreewidget.h \
     mainwindow.h
 
 FORMS += \
