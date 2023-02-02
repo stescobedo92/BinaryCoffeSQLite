@@ -10,14 +10,25 @@ CONFIG += c++17
 
 SOURCES += \
     bincqlitetreewidget.cpp \
+    finddialog.cpp \
+    findform.cpp \
+    findreplacedialog.cpp \
+    findreplaceform.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     bincqlitetreewidget.h \
+    finddialog.h \
+    findform.h \
+    findreplace_global.h \
+    findreplacedialog.h \
+    findreplaceform.h \
     mainwindow.h
 
 FORMS += \
+    findreplacedialog.ui \
+    findreplaceform.ui \
     mainwindow.ui
 
 # Default rules for deployment.
