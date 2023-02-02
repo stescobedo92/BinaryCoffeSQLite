@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QFile>
+#include <QTextStream>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QTreeWidgetItem>
@@ -72,13 +74,42 @@ void MainWindow::on_actionSave_Data_Base_triggered()
 
 void MainWindow::on_actionOpen_SQL_Script_triggered()
 {
+    auto saveScript = QFileDialog::getOpenFileName(this, QString("Save script"), QDir::currentPath(), QString("SQL file (*.sql);;"));
 
+    if(saveScript.isEmpty())
+        return;
+
+    QFile scriptFile(saveScript);
+    if (!scriptFile.open(QIODevice::Text | QIODevice::ReadOnly)) {
+        QMessageBox::critical(this,QString("Error"), QString("Error: The script %1 cannot be open").arg(scriptFile.fileName()));
+    }
+    else {
+        QTextStream scripTextStream(&scriptFile);
+        QMessageBox::information(this,QString("Saved"), QString("The script %1 was saved").arg(scriptFile.fileName()));
+        ui->textEdit->setText(scripTextStream.readAll());
+    }
+    scriptFile.close();
 }
 
 
 void MainWindow::on_actionSave_SQL_Script_triggered()
 {
+    auto openScript = QFileDialog::getSaveFileName(this, QString("Open script"), QDir::currentPath(), QString("SQL file (*.sql);;"));
 
+    if(openScript.isEmpty())
+        return;
+
+    QFile scriptFile(openScript);
+    if (!scriptFile.open(QIODevice::Text | QIODevice::WriteOnly)) {
+        QMessageBox::critical(this,QString("Error"), QString("Error: The script %1 cannot be open").arg(scriptFile.fileName()));
+    }
+    else {
+        QTextStream scripTextStream(&scriptFile);
+        scripTextStream << ui->textEdit->toPlainText();
+        QMessageBox::information(this,QString("Saved"), QString("The script file %1 was saved").arg(scriptFile.fileName()));
+    }
+    scriptFile.flush();
+    scriptFile.close();
 }
 
 
