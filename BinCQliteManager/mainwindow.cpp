@@ -25,7 +25,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionOpen_Data_Base_triggered()
 {
-    auto databaseName = QFileDialog::getOpenFileName(this, "Open data base", QDir::currentPath(), "Data base (*.db);;");
+    auto databaseName = QFileDialog::getOpenFileName(this, QString("Open data base"), QDir::currentPath(), QString("Data base (*.db);;"));
 
     if(databaseName.isEmpty())
         return;
@@ -38,10 +38,10 @@ void MainWindow::on_actionOpen_Data_Base_triggered()
     mDataBase.setDatabaseName(databaseName);
 
     if(!mDataBase.open()) {
-        QMessageBox::critical(this,"Error", QString("Error: The data base %1 could not be open").arg(databaseNameInfo.fileName()));
+        QMessageBox::critical(this,QString("Error"), QString("Error: The data base %1 could not be open").arg(databaseNameInfo.fileName()));
     }
     else {
-        QMessageBox::information(this,"Abierto", QString("The data base %1 was open").arg(databaseNameInfo.fileName()));
+        QMessageBox::information(this,QString("Openend"), QString("The data base %1 was open").arg(databaseNameInfo.fileName()));
     }
 
 }
@@ -49,7 +49,24 @@ void MainWindow::on_actionOpen_Data_Base_triggered()
 
 void MainWindow::on_actionSave_Data_Base_triggered()
 {
+    auto saveDatabaseName = QFileDialog::getSaveFileName(this, QString("Save data base"), QDir::currentPath(), QString("Data base (*.db);;"));
 
+    if(saveDatabaseName.isEmpty())
+        return;
+
+    auto databaseNameInfo = QFileInfo(saveDatabaseName);
+    auto databaseItem = new TreeItem;
+    databaseItem->setIcon(0, QIcon(""));
+    databaseItem->setText(0, databaseNameInfo.fileName());
+    ui->treeWidget->addTopLevelItem(databaseItem);
+    mDataBase.setDatabaseName(saveDatabaseName);
+
+    if(!mDataBase.open()) {
+        QMessageBox::critical(this,QString("Error"), QString("Error: The data base %1 could not be open").arg(databaseNameInfo.fileName()));
+    }
+    else {
+        QMessageBox::information(this,QString("Saved"), QString("The data base %1 was saved").arg(databaseNameInfo.fileName()));
+    }
 }
 
 
