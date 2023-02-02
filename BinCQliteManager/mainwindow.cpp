@@ -26,7 +26,17 @@ MainWindow::MainWindow(QWidget *parent)
     ui->centralwidget->layout()->setContentsMargins(0,0,0,0);
 
     connect(ui->treeWidget, &BinCQLiteTreeWidget::newTable, [&](){
-        //TODO
+        auto itm = ui->treeWidget->currentItem();
+        if(itm == nullptr){
+             QMessageBox::warning(this,QString("Attention"), QString("This function is only permit when is selected one data base"));
+             return;
+        }
+
+        auto pather = itm->parent();
+        if(pather != nullptr) {
+           QMessageBox::warning(this,QString("Attention"), QString("This function is only permit when is selected one data base"));
+           return;
+        }
     });
 }
 
@@ -172,11 +182,64 @@ void MainWindow::on_actionExecute_triggered()
     auto sqlQuery = ui->textEdit->toPlainText();
     if(sqlQuery.startsWith("select", Qt::CaseInsensitive)) {
         sqlQueryModel->setQuery(sqlQuery);
-    } else     if(sqlQuery.startsWith("create table", Qt::CaseInsensitive)) {
-        sqlQueryModel->setQuery(sqlQuery);
-    }else     if(sqlQuery.startsWith("drop table", Qt::CaseInsensitive)) {
-        sqlQueryModel->setQuery(sqlQuery);
-    }else{
+    }
+    else if(sqlQuery.startsWith("create table", Qt::CaseInsensitive)) {
+        QSqlQuery qry;
+        if(!qry.exec(sqlQuery))
+            return;
+
+        auto currentDataBase = mDataBase.databaseName();
+        int i, tam = ui->treeWidget->topLevelItemCount();
+        for(i=0; i < tam; ++i) {
+          if(ui->treeWidget->topLevelItem(i)->text(0).toLower() == currentDataBase.toLower()) {
+              break;
+          }
+        }
+
+        auto baseItem = ui->treeWidget->topLevelItem(i);
+        auto tableItem = new TreeItem;
+        tableItem->setIcon(0, QIcon(""));
+
+        //search table name
+        auto createTable = QString("create table ");
+        int firstPosition = createTable.size();
+        int secondPosition = sqlQuery.indexOf("(", firstPosition);
+        auto table = sqlQuery.mid(firstPosition, secondPosition - firstPosition);
+        table = table.mid(0, table.indexOf(" "));
+
+        tableItem->setText(0, table);
+        baseItem->addChild(tableItem);
+    }
+    else if(sqlQuery.startsWith("drop table", Qt::CaseInsensitive)) {
+        QSqlQuery qry;
+        if(!qry.exec(sqlQuery))
+            return;
+
+        auto currentDataBase = mDataBase.databaseName();
+        int i, tam = ui->treeWidget->topLevelItemCount();
+        for(i=0; i < tam; ++i) {
+          if(ui->treeWidget->topLevelItem(i)->text(0) == currentDataBase) {
+              break;
+          }
+        }
+
+        auto baseItem = ui->treeWidget->topLevelItem(i);
+        auto tableItem = new TreeItem;
+        tableItem->setIcon(0, QIcon(""));
+
+        //search table name
+        auto droptable = QString("drop table");
+        auto table = sqlQuery.mid(droptable.size());
+        table = table.mid(1);
+        for(i = 0; i < tam; ++i) {
+            if(baseItem->child(i)->text(0).toLower() == table.toLower())
+                break;
+        }
+
+        baseItem->removeChild(baseItem->child(i));
+
+    }
+    else{
         QSqlQuery query;
         if(!query.exec(sqlQuery)) {
             //TODO...
@@ -207,6 +270,9 @@ void MainWindow::on_actionFind_and_Replace_triggered()
 
 void MainWindow::on_treeWidget_clicked(const QModelIndex &index)
 {
+    if(index.parent().isValid())
+        return;
+
     QString databaBaseName = index.data().toString();
     mDataBase.setDatabaseName(databaBaseName);
     if(!mDataBase.open()) {
