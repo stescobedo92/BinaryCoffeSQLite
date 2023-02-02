@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->centralwidget->layout()->setContentsMargins(0,0,0,0);
 }
 
 MainWindow::~MainWindow()
