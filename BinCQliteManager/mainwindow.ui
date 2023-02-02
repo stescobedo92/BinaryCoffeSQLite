@@ -20,7 +20,7 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QTreeWidget" name="treeWidget">
+      <widget class="BinCQLiteTreeWidget" name="treeWidget">
        <property name="contextMenuPolicy">
         <enum>Qt::ActionsContextMenu</enum>
        </property>
@@ -155,12 +155,14 @@
     <string>About</string>
    </property>
   </action>
-  <action name="actionNew_Table">
-   <property name="text">
-    <string>New Table</string>
-   </property>
-  </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BinCQLiteTreeWidget</class>
+   <extends>QTreeWidget</extends>
+   <header location="global">bincqlitetreewidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
