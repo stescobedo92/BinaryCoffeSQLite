@@ -6,6 +6,8 @@
 #include <QFileDialog>
 #include <QTreeWidgetItem>
 #include <QFileInfo>
+#include <QPrinter>
+#include <QPrintDialog>
 
 //alias for QTreeWidgetItem component
 using TreeItem = QTreeWidgetItem;
@@ -115,7 +117,11 @@ void MainWindow::on_actionSave_SQL_Script_triggered()
 
 void MainWindow::on_actionPrint_triggered()
 {
+    QPrintDialog print(this);
+    if(print.exec() == QDialog::Rejected)
+        return;
 
+    ui->textEdit->print(print.printer());
 }
 
 
