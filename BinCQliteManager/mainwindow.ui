@@ -21,9 +21,12 @@
        <enum>Qt::Horizontal</enum>
       </property>
       <widget class="QTreeWidget" name="treeWidget">
+       <property name="contextMenuPolicy">
+        <enum>Qt::ActionsContextMenu</enum>
+       </property>
        <column>
         <property name="text">
-         <string notr="true">1</string>
+         <string>Data Base</string>
         </property>
        </column>
       </widget>
@@ -150,6 +153,11 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionNew_Table">
+   <property name="text">
+    <string>New Table</string>
    </property>
   </action>
  </widget>

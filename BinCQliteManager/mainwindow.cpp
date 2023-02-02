@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->centralwidget->layout()->setContentsMargins(0,0,0,0);
+    ui->treeWidget->addAction(ui->actionNew_Table);
 }
 
 MainWindow::~MainWindow()
