@@ -1,12 +1,19 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
+#include <QFileDialog>
+#include <QTreeWidgetItem>
+#include <QFileInfo>
+
+//alias for QTreeWidgetItem component
+using TreeItem = QTreeWidgetItem;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    mDataBase = QSqlDatabase::addDatabase("QSQLITE");
     ui->centralwidget->layout()->setContentsMargins(0,0,0,0);
 }
 
@@ -18,6 +25,24 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionOpen_Data_Base_triggered()
 {
+    auto databaseName = QFileDialog::getOpenFileName(this, "Open data base", QDir::currentPath(), "Data base (*.db);;");
+
+    if(databaseName.isEmpty())
+        return;
+
+    auto databaseNameInfo = QFileInfo(databaseName);
+    auto databaseItem = new TreeItem;
+    databaseItem->setIcon(0, QIcon(""));
+    databaseItem->setText(0, databaseNameInfo.fileName());
+    ui->treeWidget->addTopLevelItem(databaseItem);
+    mDataBase.setDatabaseName(databaseName);
+
+    if(!mDataBase.open()) {
+        QMessageBox::critical(this,"Error", QString("Error: The data base %1 could not be open").arg(databaseNameInfo.fileName()));
+    }
+    else {
+        QMessageBox::information(this,"Abierto", QString("The data base %1 was open").arg(databaseNameInfo.fileName()));
+    }
 
 }
 
