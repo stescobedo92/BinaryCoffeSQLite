@@ -141,14 +141,13 @@ void FindReplaceForm::find(bool next) {
         flags |= QTextDocument::FindWholeWords;
 
     if (ui->regexCheckBox->isChecked()) {
-        QRegExp reg(toSearch,
-                    (ui->caseCheckBox->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive));
+        QRegExp reg(toSearch,(ui->caseCheckBox->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive));
 
         qDebug() << "searching for regexp: " << reg.pattern();
 
-        textCursor = textEdit->document()->find(reg, textCursor, flags);
-        textEdit->setTextCursor(textCursor);
-        result = (!textCursor.isNull());
+        //textCursor = textEdit->document()->find(reg, textCursor, flags);
+        //textEdit->setTextCursor(textCursor);
+        //result = (!textCursor.isNull());
     } else {
         qDebug() << "searching for: " << toSearch;
 

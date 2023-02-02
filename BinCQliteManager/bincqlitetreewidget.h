@@ -8,8 +8,11 @@ class QAction;
 
 class BinCQLiteTreeWidget : public QTreeWidget
 {
+    Q_OBJECT
 public:
     BinCQLiteTreeWidget(QWidget* parent=nullptr);
+signals:
+    void newTable();
 private:
     QAction* mActionNewTable;
 };

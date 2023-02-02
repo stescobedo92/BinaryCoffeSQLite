@@ -8,6 +8,8 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+class QSqlQueryModel;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -18,31 +20,24 @@ public:
 
 private slots:
     void on_actionOpen_Data_Base_triggered();
-
     void on_actionSave_Data_Base_triggered();
-
     void on_actionOpen_SQL_Script_triggered();
-
     void on_actionSave_SQL_Script_triggered();
-
     void on_actionPrint_triggered();
-
     void on_actionExit_triggered();
-
     void on_actionCopy_triggered();
-
     void on_actionCut_triggered();
-
     void on_actionPaste_triggered();
-
     void on_actionExecute_triggered();
-
     void on_actionPreferences_triggered();
-
     void on_actionAbout_triggered();
+    void on_actionFind_and_Replace_triggered();
+
+    void on_treeWidget_clicked(const QModelIndex &index);
 
 private:
     Ui::MainWindow *ui;
     QSqlDatabase mDataBase;
+    QSqlQueryModel *sqlQueryModel;
 };
 #endif // MAINWINDOW_H

@@ -74,6 +74,8 @@
     <addaction name="actionCopy"/>
     <addaction name="actionCut"/>
     <addaction name="actionPaste"/>
+    <addaction name="separator"/>
+    <addaction name="actionFind_and_Replace"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -153,6 +155,11 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionFind_and_Replace">
+   <property name="text">
+    <string>Find and Replace</string>
    </property>
   </action>
  </widget>

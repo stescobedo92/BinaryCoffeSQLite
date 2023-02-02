@@ -3,12 +3,14 @@
 #include "findreplacedialog.h"
 #include <QFile>
 #include <QTextStream>
+#include <QSqlQuery>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QTreeWidgetItem>
 #include <QFileInfo>
 #include <QPrinter>
 #include <QPrintDialog>
+#include <QSqlQueryModel>
 
 //alias for QTreeWidgetItem component
 using TreeItem = QTreeWidgetItem;
@@ -19,7 +21,13 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     mDataBase = QSqlDatabase::addDatabase("QSQLITE");
+    sqlQueryModel = new QSqlQueryModel(this);
+    ui->tableView->setModel(sqlQueryModel);
     ui->centralwidget->layout()->setContentsMargins(0,0,0,0);
+
+    connect(ui->treeWidget, &BinCQLiteTreeWidget::newTable, [&](){
+        //TODO
+    });
 }
 
 MainWindow::~MainWindow()
@@ -39,13 +47,22 @@ void MainWindow::on_actionOpen_Data_Base_triggered()
     auto databaseItem = new TreeItem;
     databaseItem->setIcon(0, QIcon(""));
     databaseItem->setText(0, databaseNameInfo.fileName());
-    ui->treeWidget->addTopLevelItem(databaseItem);
     mDataBase.setDatabaseName(databaseName);
 
     if(!mDataBase.open()) {
         QMessageBox::critical(this,QString("Error"), QString("Error: The data base %1 could not be open").arg(databaseNameInfo.fileName()));
+        return;
     }
     else {
+        QSqlQuery query;
+        query.exec("SELECT tbl_name FROM sqlite_master WHERE type LIKE 'table'");
+        while(query.next()) {
+            auto tableItem = new TreeItem;
+            tableItem->setIcon(0, QIcon(""));
+            tableItem->setText(0, query.value(0).toString());
+            databaseItem->addChild(tableItem);
+        }
+        ui->treeWidget->addTopLevelItem(databaseItem);
         QMessageBox::information(this,QString("Openend"), QString("The data base %1 was open").arg(databaseNameInfo.fileName()));
     }
 
@@ -152,7 +169,19 @@ void MainWindow::on_actionPaste_triggered()
 
 void MainWindow::on_actionExecute_triggered()
 {
-
+    auto sqlQuery = ui->textEdit->toPlainText();
+    if(sqlQuery.startsWith("select", Qt::CaseInsensitive)) {
+        sqlQueryModel->setQuery(sqlQuery);
+    } else     if(sqlQuery.startsWith("create table", Qt::CaseInsensitive)) {
+        sqlQueryModel->setQuery(sqlQuery);
+    }else     if(sqlQuery.startsWith("drop table", Qt::CaseInsensitive)) {
+        sqlQueryModel->setQuery(sqlQuery);
+    }else{
+        QSqlQuery query;
+        if(!query.exec(sqlQuery)) {
+            //TODO...
+        }
+    }
 }
 
 
@@ -173,5 +202,15 @@ void MainWindow::on_actionFind_and_Replace_triggered()
     FindReplaceDialog findReplaceDialog(this);
     findReplaceDialog.setTextEdit(ui->textEdit);
     findReplaceDialog.exec();
+}
+
+
+void MainWindow::on_treeWidget_clicked(const QModelIndex &index)
+{
+    QString databaBaseName = index.data().toString();
+    mDataBase.setDatabaseName(databaBaseName);
+    if(!mDataBase.open()) {
+       QMessageBox::information(this,QString("Saved"), QString("The data base %1 was saved").arg(databaBaseName));
+    }
 }
 
