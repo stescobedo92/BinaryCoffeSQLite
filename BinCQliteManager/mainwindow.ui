@@ -36,6 +36,7 @@
        </property>
        <widget class="QTextEdit" name="textEdit"/>
        <widget class="QTableView" name="tableView"/>
+       <widget class="QListWidget" name="listWidget"/>
       </widget>
      </widget>
     </item>
