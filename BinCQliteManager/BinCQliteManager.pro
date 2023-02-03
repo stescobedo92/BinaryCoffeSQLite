@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    bincqlitenewtabledialog.cpp \
     bincqlitetreewidget.cpp \
     finddialog.cpp \
     findform.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    bincqlitenewtabledialog.h \
     bincqlitetreewidget.h \
     finddialog.h \
     findform.h \
@@ -26,6 +28,7 @@ HEADERS += \
     mainwindow.h
 
 FORMS += \
+    bincqlitenewtabledialog.ui \
     findreplacedialog.ui \
     findreplaceform.ui \
     mainwindow.ui
@@ -34,3 +37,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    res.qrc

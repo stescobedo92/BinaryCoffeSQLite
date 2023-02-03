@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/binarycoffee.png</file>
+        <file>images/db.png</file>
+        <file>images/cerrar-sesion.png</file>
+        <file>images/copia.png</file>
+        <file>images/engranajes.png</file>
+        <file>images/pegar.png</file>
+        <file>images/tijeras.png</file>
+        <file>images/ajustes.png</file>
+        <file>images/data-stacks.png</file>
+        <file>images/management.png</file>
+        <file>images/save-data.png</file>
+        <file>images/search.png</file>
+        <file>images/errorLine.png</file>
+        <file>images/table.png</file>
+    </qresource>
+</RCC>

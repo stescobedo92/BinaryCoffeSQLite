@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "findreplacedialog.h"
+#include "bincqlitenewtabledialog.h"
+
 #include <QFile>
 #include <QTextStream>
 #include <QSqlQuery>
@@ -38,6 +40,13 @@ MainWindow::MainWindow(QWidget *parent)
            QMessageBox::warning(this,QString("Attention"), QString("This function is only permit when is selected one data base"));
            return;
         }
+
+        BinCQliteNewTableDialog newTableDialog(this);
+        if(newTableDialog.exec() == QDialog::Rejected) {
+            return;
+        }
+        ui->textEdit->clear();
+        ui->textEdit->setPlainText(newTableDialog.addFieldResult());
     });
 
     connect(ui->treeWidget, &BinCQLiteTreeWidget::dropDataBase, [&](){
@@ -71,6 +80,7 @@ MainWindow::MainWindow(QWidget *parent)
         }
         ui->textEdit->clear();
         ui->textEdit->setPlainText(QString("SELECT * FROM %1").arg(itm->text(0)));
+        on_actionExecute_triggered();
     });
 
     connect(ui->treeWidget, &BinCQLiteTreeWidget::dropTable, [&](){
@@ -138,7 +148,7 @@ void MainWindow::on_actionSave_Data_Base_triggered()
 
     auto databaseNameInfo = QFileInfo(saveDatabaseName);
     auto databaseItem = new TreeItem;
-    databaseItem->setIcon(0, QIcon(""));
+    databaseItem->setIcon(0, QIcon(":images/table"));
     databaseItem->setText(0, databaseNameInfo.fileName());
     ui->treeWidget->addTopLevelItem(databaseItem);
     mDataBase.setDatabaseName(saveDatabaseName);
@@ -236,10 +246,10 @@ void MainWindow::on_actionExecute_triggered()
     else if(sqlQuery.startsWith("create table", Qt::CaseInsensitive)) {
         QSqlQuery qry;
         if(!qry.exec(sqlQuery)) {
-            ui->listWidget->addItem(new ListItem(QIcon(""),sqlQuery));
+            ui->listWidget->addItem(new ListItem(QIcon(":images/errorLine"),sqlQuery));
             return;
         }
-        ui->listWidget->addItem(new ListItem(QIcon(""),sqlQuery));
+        ui->listWidget->addItem(new ListItem(QIcon(":images/errorLine"),sqlQuery));
 
         auto currentDataBase = mDataBase.databaseName();
         int i, tam = ui->treeWidget->topLevelItemCount();
@@ -268,14 +278,14 @@ void MainWindow::on_actionExecute_triggered()
         }
 
         auto tableItem = new TreeItem;
-        tableItem->setIcon(0, QIcon(""));
+        tableItem->setIcon(0, QIcon(":images/table"));
         tableItem->setText(0, table);
         baseItem->addChild(tableItem);
     }
     else if(sqlQuery.startsWith("drop table", Qt::CaseInsensitive)) {
         QSqlQuery qry;
         if(!qry.exec(sqlQuery)) {
-            ui->listWidget->addItem(new ListItem(QIcon(""),sqlQuery));
+            ui->listWidget->addItem(new ListItem(QIcon(":images/errorLine"),sqlQuery));
             return;
         }
         ui->listWidget->addItem(new ListItem(QIcon(""),sqlQuery));
@@ -304,7 +314,7 @@ void MainWindow::on_actionExecute_triggered()
     else {
         QSqlQuery qry;
         if(!qry.exec(sqlQuery)) {
-            ui->listWidget->addItem(new ListItem(QIcon(""),sqlQuery));
+            ui->listWidget->addItem(new ListItem(QIcon(":images/errorLine"),sqlQuery));
             return;
         }
         ui->listWidget->addItem(new ListItem(QIcon(""),sqlQuery));
